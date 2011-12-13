@@ -1,2 +1,4 @@
 *.class
 *.swp
+.DS_Store
+images/output/
