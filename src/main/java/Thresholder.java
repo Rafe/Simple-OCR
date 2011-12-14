@@ -20,22 +20,54 @@ public class Thresholder{
    * @return BufferedImage as Transformed image
    */
   public BufferedImage thresholdTransform(BufferedImage image,double threshold,int grayValue){
+
     if(image == null){
       return null;
     }
-    int w = image.getWidth();
-    int h = image.getHeight();
+
+    int width = image.getWidth();
+    int height = image.getHeight();
+
     //calculate color as RGB integer
     int color = (grayValue << 16) | (grayValue << 8) | grayValue;
-    BufferedImage result = new BufferedImage(w,h,BufferedImage.TYPE_INT_RGB);
-    for(int i=0;i<h;i++){
-      for(int j=0;j<w;j++){
-        int pixel = image.getRGB(j,i);
-        int gray = (pixel) & 0xff;
-        if(gray >= threshold){
-          result.setRGB(j,i,color);
+
+    BufferedImage result = new BufferedImage(width,height,BufferedImage.TYPE_BYTE_GRAY);
+    for(int h=0;h<height-2;h++){
+      for(int w=0;w<width-2;w++){
+
+        /*
+        int[] pixels = new int[9];
+        image.getRGB(w,h,3,3,pixels,0,3);
+        int avg = 0 ;
+        for(int i=0; i<pixels.length;i++){
+          avg += pixels[i] & 0xff;
+        }
+        avg /= pixels.length;
+        */
+
+        int avg = image.getRGB(w,h) & 0xff;
+
+        if(avg >= threshold){
+          //set to background color
+          result.setRGB(w,h,color);
         }else{
-          result.setRGB(j,i,0);
+          result.setRGB(w,h,0);
+          //splash 1 pixel
+          if(w>1 && w<width-1 && h>1 && h<height-1){
+            result.setRGB(w-1,h,0);
+            result.setRGB(w,h-1,0);
+            result.setRGB(w+1,h,0);
+            result.setRGB(w,h+1,0);
+            result.setRGB(w-1,h-1,0);
+            result.setRGB(w-1,h+1,0);
+            result.setRGB(w+1,h-1,0);
+            result.setRGB(w+1,h+1,0);
+            result.setRGB(w+2,h,0);
+            result.setRGB(w-2,h,0);
+            result.setRGB(w,h-2,0);
+            result.setRGB(w,h+2,0);
+
+          }
         }
       }
     }
@@ -70,9 +102,12 @@ public class Thresholder{
     for(String file:files){
       try{
         System.out.println("processing::" + file);
+
         BufferedImage image = ImageIO.read(new File("images/"+file));   
         BufferedImage a = thresholdTransform(image,120,255);
+
         saveImage(a,"images/output/"+file);
+
       }catch(IOException e){
         System.err.println(e.getMessage());
       }catch(IllegalArgumentException e){
