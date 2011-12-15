@@ -48,7 +48,8 @@ public class Extractor{
     if(!equalTable.containsKey(value)){
       return value;
     }else{
-      return findEqualivalant(equalTable.get(value),equalTable);
+      int equal = equalTable.get(value);
+      return equal < value ? findEqualivalant(equalTable.get(value),equalTable) : value;
     }
   }
 
@@ -102,6 +103,11 @@ public class Extractor{
       }
     }
     return result;
+  }
+
+  public static ArrayList<CharImage> extractedImages{
+
+  
   }
 
   public static void main(String[] args){

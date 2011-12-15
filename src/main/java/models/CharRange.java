@@ -6,8 +6,8 @@ public class CharRange{
   public int left,right,top,down;
 
   public CharRange(int x,int y){
-    left = 0;
-    right = x;
+    left = x;
+    right = 0;
     top = y;
     down = 0;
   }
@@ -15,13 +15,17 @@ public class CharRange{
   public void update(int x,int y){
     if(x < left){
       left = x;
-    }else if(x > right){
+    }
+
+    if(x > right){
       right = x;
     }
 
     if(y < top){
       top = y;
-    }else if(y > down){
+    }
+
+    if(y > down){
       down = y;
     }
 

@@ -1,0 +1,5 @@
+Testsuite: CharRangeTest
+Tests run: 2, Failures: 0, Errors: 0, Time elapsed: 0.058 sec
+
+Testcase: Update_should_update_range_properly took 0.003 sec
+Testcase: update_2_points_should_form_a_range took 0 sec
