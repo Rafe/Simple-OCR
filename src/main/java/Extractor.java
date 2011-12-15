@@ -86,15 +86,15 @@ public class Extractor{
     return label == Integer.MAX_VALUE ? 0 : label;
   }
 
-  public static BufferedImage mappingImage(int[][] labeledImage){
-    int width = labeledImage[0].length;
-    int height = labeledImage.length;
+  public static BufferedImage mappingImage(int[][] image){
+    int width = image[0].length;
+    int height = image.length;
 
     BufferedImage result = new BufferedImage(width,height,BufferedImage.TYPE_BYTE_GRAY);
     for(int h = 0 ; h < height; h++){
       for(int w = 0 ; w < width; w++){
-        if(labeledImage[h][w] != 0){
-          int pixel = (labeledImage[h][w] * 15) % 255;
+        if(image[h][w] != 0){
+          int pixel = (image[h][w] * 15) % 255;
           int color = (pixel << 16) | (pixel << 8) | pixel;
           result.setRGB(w,h,color);
         }else{
@@ -105,22 +105,59 @@ public class Extractor{
     return result;
   }
 
-  public static ArrayList<CharImage> extractedImages{
+  public static ArrayList<CharImage> extractImages(int[][] labeledImage){
 
-  
+    int width = labeledImage[0].length;
+    int height = labeledImage.length;
+
+    HashMap<Integer,CharRange> map = new HashMap<Integer,CharRange>();
+    ArrayList<CharImage> result = new ArrayList<CharImage>();
+
+    //count charactor range
+    for(int h = 0; h < height; h++){
+      for(int w = 0; w < width; w++){
+
+        int key = labeledImage[h][w];
+
+        if(!map.containsKey(key)){
+          CharRange range = new CharRange(w,h);
+          map.put(key,range);
+        }else{
+          map.get(key).update(w,h);
+        }
+      }
+    }
+
+    //crop charactor
+    Integer[] keys = new Integer[map.keySet().size()]; 
+    map.keySet().toArray(keys);
+    Arrays.sort(keys);
+    for(Integer key : keys){
+      CharRange range = map.get(key);
+      if(range.isValid()){
+        result.add(new CharImage(key,labeledImage,range));
+      }
+    }
+    return result;
   }
 
   public static void main(String[] args){
     try{
-      BufferedImage image = ImageIO.read(new File("images/output/IMG_5.bmp"));   
+      BufferedImage source = ImageIO.read(new File("images/output/IMG_1.bmp"));   
       int label = 0;
-      int width = image.getWidth();
-      int height = image.getHeight();
-      int labeledImage[][] = labeling(image);
-      
-      BufferedImage result = mappingImage(labeledImage);
+      int width = source.getWidth();
+      int height = source.getHeight();
+      int labeledImage[][] = labeling(source);
 
-      ImageIO.write(result,"bmp",new File("images/output/labeled.bmp"));
+      ArrayList<CharImage> list = extractImages(labeledImage);
+      System.out.println(list.size());
+      
+      int n = 1;
+      for(CharImage image : list){
+        BufferedImage result = mappingImage(image.toImage());
+        ImageIO.write(result,"bmp",new File("images/output/labeled"+n+".bmp"));
+        n += 1;
+      }
     }catch(Exception e){
       System.out.println(e.getMessage());
     }

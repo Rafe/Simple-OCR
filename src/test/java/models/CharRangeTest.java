@@ -14,6 +14,13 @@ public class CharRangeTest{
     range = new CharRange(100,100);
   }
 
+  @Test
+  public void CharRange_should_create_correctly(){
+    assertEquals(range.count,1);
+    assertEquals(range.left,100);
+    assertEquals(range.right,100);
+  }
+
   @Test 
   public void Update_should_update_range_properly(){
     range.update(50,50);
@@ -31,6 +38,12 @@ public class CharRangeTest{
     assertEquals(range.right,40);
     assertEquals(range.top,40);
     assertEquals(range.down,60);
-    
+  }
+
+  @Test public void getWidth_should_return_width(){
+    range.update(20,40);
+    range.update(40,60);
+    assertEquals(range.getWidth(),21);
+    assertEquals(range.getHeight(),21);
   }
 }
