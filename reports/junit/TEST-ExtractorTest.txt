@@ -1,4 +1,0 @@
-Testsuite: ExtractorTest
-Tests run: 1, Failures: 0, Errors: 0, Time elapsed: 0.005 sec
-
-Testcase: findEqualivalant_should_return_smallest_equal took 0.001 sec
