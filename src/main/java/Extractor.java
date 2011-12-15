@@ -8,66 +8,115 @@ import javax.imageio.ImageIO;
 import java.util.HashMap;
 
 public class Extractor{
+  public static final int BLACK = 0;
 
-  public static void main(String[] args){
-    try{
-      BufferedImage image = ImageIO.read(new File("images/output/IMG_1.bmp"));   
+  public static int[][] labeling(BufferedImage image){
       int label = 0;
-      HashMap equalTable = new HashMap();
+      HashMap<Integer,Integer> equalTable = new HashMap<Integer,Integer>();
       int width = image.getWidth();
       int height = image.getHeight();
-      int LabeledImage[][] = new int[height][width]; 
+      int labeledImage[][] = new int[height][width]; 
 
-      System.out.println("starting labeling...");
+      //start labeling
       for(int h = 1 ; h < height-1; h++){
         for(int w = 1 ; w < width-1; w++){
           int pixel = image.getRGB(w,h) & 0xff;    
-          if(pixel == 0){
-            int closeLabel =  getCloseLabel(LabeledImage,h,w);
+          if(pixel == BLACK){
+            int closeLabel = getCloseLabel(labeledImage,equalTable,h,w);
             if(closeLabel > 0){
-              LabeledImage[h][w] = closeLabel;
+              labeledImage[h][w] = closeLabel;
             }else{
-              LabeledImage[h][w] = ++label; 
+              label += 1;
+              labeledImage[h][w] = label; 
             }
           }
         }
       }
 
-      //scan & set equalivalant
+      //reset label base on equalivalant
       for(int h=1;h<height-1;h++){
         for(int w=1;w<width-1;w++){
-        }
-      }
-
-      BufferedImage result = new BufferedImage(width,height,BufferedImage.TYPE_BYTE_GRAY);
-      for(int h = 0 ; h < height; h++){
-        for(int w = 0 ; w < width; w++){
-          if(LabeledImage[h][w] != 0){
-            int pixel = (LabeledImage[h][w] * 15) % 255;
-            int color = (pixel << 16) | (pixel << 8) | pixel;
-            result.setRGB(w,h,color);
-          }else{
-            result.setRGB(w,h,0xffffff);
+          if(equalTable.containsKey(labeledImage[h][w])){
+             labeledImage[h][w] = findEqualivalant(labeledImage[h][w],equalTable);
           }
         }
       }
-      ImageIO.write(result,"bmp",new File("images/output/labeled.bmp"));
-    }catch(Exception e){
-      System.out.println(e.getMessage());
+      return labeledImage;
+  }
+
+  public static int findEqualivalant(int value, HashMap<Integer,Integer> equalTable){
+    if(!equalTable.containsKey(value)){
+      return value;
+    }else{
+      return findEqualivalant(equalTable.get(value),equalTable);
     }
   }
 
-  public static int getCloseLabel(int[][] LabeledImage,int h,int w){
-    if(LabeledImage[h-1][w-1] > 0){
-      return LabeledImage[h-1][w-1];
-    }else if(LabeledImage[h-1][w] > 0){
-      return LabeledImage[h-1][w];
-    }else if(LabeledImage[h-1][w+1]>0){
-      return LabeledImage[h-1][w+1];
-    }else if(LabeledImage[h][w-1]>0){
-      return LabeledImage[h][w-1];
-    }else{
-      return 0;
+  public static int getCloseLabel(int[][] labeledImage,HashMap<Integer,Integer> equalTable, int h,int w){
+    int label = Integer.MAX_VALUE;
+    int min = 0;
+
+    /*  check  OOO
+     *         OX      position to get minimum value for labeling
+     *                 also check if there is smaller value for equalTable
+     */
+    for(int i = -1; i<2; i++){
+      if(labeledImage[h-1][w+i] > 0){
+        min = Math.min(label,labeledImage[h-1][w+i]);
+        if(min < label){
+          if(!equalTable.containsKey(label)){
+            equalTable.put(label,min);
+          }
+          label = min;
+        }
+      }
+    }
+
+    if(labeledImage[h][w-1] > 0){
+      min = Math.min(label,labeledImage[h][w-1]);
+      if(min < label){
+        if(!equalTable.containsKey(label)){
+          equalTable.put(label,min);
+        }
+        label = min;
+      }
+    }
+
+    return label == Integer.MAX_VALUE ? 0 : label;
+  }
+
+  public static BufferedImage mappingImage(int[][] labeledImage){
+    int width = labeledImage[0].length;
+    int height = labeledImage.length;
+
+    BufferedImage result = new BufferedImage(width,height,BufferedImage.TYPE_BYTE_GRAY);
+    for(int h = 0 ; h < height; h++){
+      for(int w = 0 ; w < width; w++){
+        if(labeledImage[h][w] != 0){
+          int pixel = (labeledImage[h][w] * 15) % 255;
+          int color = (pixel << 16) | (pixel << 8) | pixel;
+          result.setRGB(w,h,color);
+        }else{
+          result.setRGB(w,h,0xffffff);
+        }
+      }
+    }
+    return result;
+  }
+
+  public static void main(String[] args){
+    try{
+      BufferedImage image = ImageIO.read(new File("images/output/IMG_5.bmp"));   
+      int label = 0;
+      int width = image.getWidth();
+      int height = image.getHeight();
+      int labeledImage[][] = labeling(image);
+      
+      BufferedImage result = mappingImage(labeledImage);
+
+      ImageIO.write(result,"bmp",new File("images/output/labeled.bmp"));
+    }catch(Exception e){
+      System.out.println(e.getMessage());
     }
   }
 }

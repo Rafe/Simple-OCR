@@ -34,17 +34,6 @@ public class Thresholder{
     BufferedImage result = new BufferedImage(width,height,BufferedImage.TYPE_BYTE_GRAY);
     for(int h=0;h<height-2;h++){
       for(int w=0;w<width-2;w++){
-
-        /*
-        int[] pixels = new int[9];
-        image.getRGB(w,h,3,3,pixels,0,3);
-        int avg = 0 ;
-        for(int i=0; i<pixels.length;i++){
-          avg += pixels[i] & 0xff;
-        }
-        avg /= pixels.length;
-        */
-
         int avg = image.getRGB(w,h) & 0xff;
 
         if(avg >= threshold){
