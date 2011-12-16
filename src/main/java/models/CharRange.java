@@ -18,9 +18,9 @@ public class CharRange{
 
   public CharRange(int x,int y){
     left = x;
-    right = 0;
+    right = x;
     top = y;
-    down = 0;
+    down = y;
     count = 1;
   }
 
@@ -61,10 +61,9 @@ public class CharRange{
   }
 
   public boolean isValid(){
-    if(count < AREA_THRESHOLD){
-      return false;
-    }
-    if(getWidth() > AREA_WIDTH || getHeight() > AREA_HEIGHT){
+    if(count < AREA_THRESHOLD || 
+        getWidth() > AREA_WIDTH || 
+        getHeight() > AREA_HEIGHT ){
       return false;
     }
     return true;

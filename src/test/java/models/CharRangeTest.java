@@ -23,16 +23,17 @@ public class CharRangeTest{
 
   @Test 
   public void Update_should_update_range_properly(){
-    range.update(50,50);
+    range = new CharRange(50,50);
     assertEquals(range.left,50);
     assertEquals(range.right,50);
     assertEquals(range.top,50);
     assertEquals(range.down,50);
-    assertEquals(range.count,1);
+    range.update(60,60);
+    assertEquals(range.count,2);
   }
 
   @Test public void update_2_points_should_form_a_range(){
-    range.update(20,40);
+    range = new CharRange(20,40);
     range.update(40,60);
     assertEquals(range.left,20);
     assertEquals(range.right,40);
@@ -41,9 +42,14 @@ public class CharRangeTest{
   }
 
   @Test public void getWidth_should_return_width(){
-    range.update(20,40);
+    range = new CharRange(20,40);
     range.update(40,60);
     assertEquals(range.getWidth(),21);
     assertEquals(range.getHeight(),21);
+  }
+
+  @Test public void getWidth_should_return_one_for_one_point(){
+    assertEquals(range.getWidth(),1);
+    assertEquals(range.getHeight(),1);
   }
 }

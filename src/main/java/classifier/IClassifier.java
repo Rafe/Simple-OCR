@@ -1,5 +1,6 @@
 package edu.poly.tchao;
 
 interface IClassifier{
-  public char check(boolean[][] image);
+  public boolean isValid(CharImage image);
+  public char getChar();
 }

@@ -153,7 +153,9 @@ public class Extractor{
       System.out.println(list.size());
       
       int n = 1;
+      IClassifier c = new OneClassifier();
       for(CharImage image : list){
+        System.out.println("find "+ image.getRatio() +" in ( "+image.x+","+image.y+ ")");
         BufferedImage result = mappingImage(image.toImage());
         ImageIO.write(result,"bmp",new File("images/output/labeled"+n+".bmp"));
         n += 1;

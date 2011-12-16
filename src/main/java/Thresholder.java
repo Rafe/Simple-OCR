@@ -19,8 +19,7 @@ public class Thresholder{
    * @param grayValue the gray value to be set for pixel over threshold
    * @return BufferedImage as Transformed image
    */
-  public BufferedImage thresholdTransform(BufferedImage image,double threshold,int grayValue){
-
+  public BufferedImage thresholdTransform(BufferedImage image,double threshold, int grayValue){
     if(image == null){
       return null;
     }
@@ -32,16 +31,16 @@ public class Thresholder{
     int color = (grayValue << 16) | (grayValue << 8) | grayValue;
 
     BufferedImage result = new BufferedImage(width,height,BufferedImage.TYPE_BYTE_GRAY);
-    for(int h=0;h<height-2;h++){
-      for(int w=0;w<width-2;w++){
-        int avg = image.getRGB(w,h) & 0xff;
+    for(int h=0;h<height;h++){
+      for(int w=0;w<width;w++){
 
-        if(avg >= threshold){
+        int pixel = image.getRGB(w,h) & 0xff;
+        if(pixel >= threshold){
           //set to background color
           result.setRGB(w,h,color);
         }else{
           result.setRGB(w,h,0);
-          //splash 1 pixel
+          //splash 1.5 pixels
           if(w>1 && w<width-1 && h>1 && h<height-1){
             result.setRGB(w-1,h,0);
             result.setRGB(w,h-1,0);
