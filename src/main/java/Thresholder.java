@@ -54,7 +54,6 @@ public class Thresholder{
             result.setRGB(w-2,h,0);
             result.setRGB(w,h-2,0);
             result.setRGB(w,h+2,0);
-
           }
         }
       }

@@ -143,7 +143,7 @@ public class Extractor{
 
   public static void main(String[] args){
     try{
-      BufferedImage source = ImageIO.read(new File("images/output/IMG_1.bmp"));   
+      BufferedImage source = ImageIO.read(new File("images/output/IMG_6.bmp"));   
       int label = 0;
       int width = source.getWidth();
       int height = source.getHeight();
@@ -152,11 +152,14 @@ public class Extractor{
       ArrayList<CharImage> list = extractImages(labeledImage);
       System.out.println(list.size() + " charactors in image");
       
+      IClassifier classifier = new Classifier();
+
       int n = 1;
       for(CharImage image : list){
-        System.out.println("find "+ image.getHole() +" in ( "+image.x+","+image.y+ ")");
-        //BufferedImage result = mappingImage(image.toImage());
-        //ImageIO.write(result,"bmp",new File("images/output/labeled"+n+".bmp"));
+        classifier.process(image);
+        image.dump();
+        BufferedImage result = mappingImage(image.toImage());
+        ImageIO.write(result,"bmp",new File("images/output/labeled"+n+".bmp"));
         n += 1;
       }
     }catch(Exception e){

@@ -56,25 +56,25 @@ public class CharImageTest{
   @Test 
   public void getMaxHeight_should_return_max_height_ratio(){
     int[][] labeledImage = {{0,1,0,0,0},
-                            {0,1,1,1,1},
+                            {1,1,1,1,1},
                             {0,1,0,1,0},
                             {0,1,1,1,1},
                             {0,0,1,0,0}};
     int label = 1;
     CharImage image = new CharImage(label,labeledImage);
-    assertEquals(image.getMaxHeight(),1,0.1);
+    assertEquals(image.getMaxHeight(),0.8,0.1);
   }
 
   @Test 
   public void getMaxWidth_should_return_max_width_ratio(){
-    int[][] labeledImage = {{0,0,1,0,0},
-                            {0,1,1,1,1},
+    int[][] labeledImage = {{0,1,1,1,0},
                             {1,1,0,1,1},
-                            {0,1,1,1,0},
-                            {0,0,0,0,0}};
+                            {1,1,0,1,1},
+                            {1,0,1,1,0},
+                            {0,1,1,1,1}};
     int label = 1;
     CharImage image = new CharImage(label,labeledImage);
-    assertEquals(image.getMaxWidth(),1,0.1);
+    assertEquals(image.getMaxWidth(),0.8,0.1);
   }
 
   @Test 

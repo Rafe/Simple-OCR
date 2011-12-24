@@ -2,13 +2,17 @@ package edu.poly.tchao;
 
 import edu.poly.tchao.CharRange;
 
+import java.util.*;
+
 public class CharImage{
   public boolean[][] imageMap;
   public float ratio;
   public int x;
   public int y;
   public int hole;
-  enum Direction { WEST,NORTH,EAST,SOUTH,CENTER}; 
+  public int maxHeight;
+  public int maxWidth;
+  private char charactor;
 
   public CharImage(int label,int[][] labeledImage){
     this(label,labeledImage,
@@ -22,6 +26,9 @@ public class CharImage{
     hole = -1;
     x = range.left;
     y = range.top;
+    charactor = 'w';
+    maxHeight = 0;
+    maxWidth = 0;
     this.imageMap = new boolean[height][width];
 
     for(int h = range.top;h<=range.down;h++){
@@ -31,6 +38,14 @@ public class CharImage{
         }
       }
     }
+  }
+
+  public void setCharactor(char w){
+    charactor = w;
+  }
+
+  public char getCharactor(){
+    return charactor;
   }
 
   public int getWidth(){
@@ -56,9 +71,12 @@ public class CharImage{
       return hole;
     }
 
-    boolean[][] map = imageMap.clone();
+    boolean[][] map = copyArray(imageMap);
 
     paintBlack(map,0,0);
+    paintBlack(map,0,getWidth()-1);
+    paintBlack(map,getHeight()-1,0);
+    paintBlack(map,getHeight()-1,getWidth()-1);
 
     int e = 0;
     int i = 0;
@@ -81,7 +99,7 @@ public class CharImage{
     return hole;
   }
 
-  public float getRatio(){
+  public float getBlackRatio(){
     if(ratio > 0){
       return ratio;
     }
@@ -96,37 +114,107 @@ public class CharImage{
     return blackCount / (getWidth() * getHeight());
   }
 
+  public float getRatio(){
+    return (float) getHeight() / (float) getWidth();
+  }
+
   public float getMaxHeight(){
-    return 1;
+    for(int w = 0; w < getWidth();w++){
+      int maxInLine = 0;
+      int line = 0;
+      for (int h = 0; h < getHeight(); h++) {
+        if(imageMap[h][w] == true){
+          line += 1;
+        }else{
+          maxInLine = Math.max(line,maxInLine);
+          line = 0;
+        }
+      }
+      maxInLine = Math.max(line,maxInLine);
+      maxHeight = Math.max(maxHeight,maxInLine);
+    }
+    //return maxHeight;
+    return (float) maxHeight / (float) getHeight();
   }
 
   public float getMaxWidth(){
-    return 1;
-  }
-
-  public static void paintBlack(boolean[][] map,int h, int w, Direction d){
-    if(map[h][w] == true){
-      return;
+    for (int h = 0; h < getHeight(); h++) {
+      int maxInLine = 0;
+      int line = 0;
+      for(int w = 0; w < getWidth(); w++){
+        if(imageMap[h][w]){
+          line += 1;
+        }else{
+          maxInLine = Math.max(line,maxInLine);
+          line = 0;
+        }
+      }
+      maxInLine = Math.max(line,maxInLine);
+      maxWidth = Math.max(maxWidth,maxInLine);
     }
-    map[h][w] = true;
-
-    if(h - 1 >= 0 && d != Direction.SOUTH){
-      paintBlack(map,h-1 , w, Direction.NORTH);
-    }
-    if(w + 1 < map[0].length && d != Direction.WEST){
-      paintBlack(map,h, w + 1,Direction.EAST);
-    }
-    if(h + 1 < map.length && d != Direction.NORTH){
-      paintBlack(map,h + 1 , w,Direction.SOUTH);
-    }
-    if(w - 1 >= 0 && d != Direction.EAST){
-      paintBlack(map,h,w - 1,Direction.WEST);
-    }
+    //return maxWidth;
+    return (float) maxWidth / (float) getWidth();
   }
 
   public static void paintBlack(boolean[][] map,int h, int w){
-    paintBlack(map,h,w,Direction.CENTER);
+
+    LinkedList<Point> queue = new LinkedList<Point>();
+    if(map[h][w] == true){
+      return;
+    }
+    queue.add(new Point(h,w));
+    while(queue.size() > 0){
+      Point p = queue.removeFirst();
+      if(!map[p.h][p.w]){
+        map[p.h][p.w] = true;
+        if(p.h - 1 >= 0){
+          queue.add(new Point(p.h-1,p.w));
+        }
+        if(p.h + 1 < map.length){
+          queue.add(new Point(p.h+1,p.w));
+        }
+        if(p.w + 1 < map[0].length){
+          queue.add(new Point(p.h,p.w+1));
+        }
+        if(p.w - 1 >= 0){
+          queue.add(new Point(p.h,p.w-1));
+        }
+      }
+    }
   }
 
+  public void print(){
+    System.out.println("found charactor "+ this.charactor +" in ( "+this.x+","+this.y+ ")");
+  }
 
+  public void dump(){
+    print();
+    System.out.println("hole:" + getHole());
+    System.out.println("Height:" + getHeight());
+    System.out.println("Width:" + getWidth());
+    System.out.println("MaxHeight:" + getMaxHeight());
+    System.out.println("MaxWidth:" + getMaxWidth());
+    System.out.println("Ratio:" + getRatio());
+    System.out.println("BlackRatio:" + getBlackRatio());
+    System.out.println("");
+  }
+
+  public static boolean[][] copyArray(boolean[][] array){
+    boolean[][] n = new boolean[array.length][array[0].length];
+    for(int h = 0 ; h < array.length ; h++){
+      for( int w = 0; w < array[0].length ; w++){
+        n[h][w] = array[h][w];
+      }
+    }
+    return n;
+  }
+}
+
+class Point{
+  public int h;
+  public int w;
+  public Point(int h,int w){
+    this.h = h;
+    this.w = w;
+  }
 }
