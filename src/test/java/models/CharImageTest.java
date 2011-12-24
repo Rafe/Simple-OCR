@@ -28,4 +28,64 @@ public class CharImageTest{
     
     assertEquals(image.getRatio(),0.5,0.1);
   }
+
+  @Test
+  public void getHole_should_return_hole_value(){
+    int[][] labeledImage = {{0,0,0,0,0},
+                            {0,1,1,1,0},
+                            {0,1,0,1,0},
+                            {0,1,1,1,0},
+                            {0,0,0,0,0}};
+    int label = 1;
+    CharImage image = new CharImage(label,labeledImage);
+    assertEquals(image.getHole(),1);
+  }
+
+  @Test
+  public void getHole_should_count_2_holes_correctly(){
+    int[][] labeledImage = {{1,1,1,1,1},
+                            {1,0,1,1,1},
+                            {1,0,1,0,1},
+                            {1,0,1,1,1},
+                            {1,1,1,1,1}};
+    int label = 1;
+    CharImage image = new CharImage(label,labeledImage);
+    assertEquals(image.getHole(),2);
+  }
+
+  @Test 
+  public void getMaxHeight_should_return_max_height_ratio(){
+    int[][] labeledImage = {{0,1,0,0,0},
+                            {0,1,1,1,1},
+                            {0,1,0,1,0},
+                            {0,1,1,1,1},
+                            {0,0,1,0,0}};
+    int label = 1;
+    CharImage image = new CharImage(label,labeledImage);
+    assertEquals(image.getMaxHeight(),1,0.1);
+  }
+
+  @Test 
+  public void getMaxWidth_should_return_max_width_ratio(){
+    int[][] labeledImage = {{0,0,1,0,0},
+                            {0,1,1,1,1},
+                            {1,1,0,1,1},
+                            {0,1,1,1,0},
+                            {0,0,0,0,0}};
+    int label = 1;
+    CharImage image = new CharImage(label,labeledImage);
+    assertEquals(image.getMaxWidth(),1,0.1);
+  }
+
+  @Test 
+  public void paintBlack_should_paint_image_successfully(){
+    boolean[][] map = {{false,false,false},
+                       {true,true,false},
+                       {false,false,false}};
+    CharImage.paintBlack(map,0,0);
+    assertTrue(map[0][0]);
+    assertTrue(map[1][0]);
+    assertTrue(map[0][2]);
+    assertTrue(map[2][2]);
+  }
 }

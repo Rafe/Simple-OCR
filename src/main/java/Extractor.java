@@ -22,9 +22,9 @@ public class Extractor{
         for(int w = 1 ; w < width-1; w++){
           int pixel = image.getRGB(w,h) & 0xff;    
           if(pixel == BLACK){
-            int closeLabel = getCloseLabel(labeledImage,equalTable,h,w);
-            if(closeLabel > 0){
-              labeledImage[h][w] = closeLabel;
+            int minLabel = getMinLabel(labeledImage,equalTable,h,w);
+            if(minLabel > 0){
+              labeledImage[h][w] = minLabel;
             }else{
               label += 1;
               labeledImage[h][w] = label; 
@@ -53,12 +53,12 @@ public class Extractor{
     }
   }
 
-  public static int getCloseLabel(int[][] labeledImage,HashMap<Integer,Integer> equalTable, int h,int w){
+  public static int getMinLabel(int[][] labeledImage,HashMap<Integer,Integer> equalTable, int h,int w){
     int label = Integer.MAX_VALUE;
     int min = 0;
 
     /*  check  OOO
-     *         OX      position to get minimum value for labeling
+     *         OX      get minimum value for labeling
      *                 also check if there is smaller value for equalTable
      */
     for(int i = -1; i<2; i++){
@@ -150,14 +150,13 @@ public class Extractor{
       int labeledImage[][] = labeling(source);
 
       ArrayList<CharImage> list = extractImages(labeledImage);
-      System.out.println(list.size());
+      System.out.println(list.size() + " charactors in image");
       
       int n = 1;
-      IClassifier c = new OneClassifier();
       for(CharImage image : list){
-        System.out.println("find "+ image.getRatio() +" in ( "+image.x+","+image.y+ ")");
-        BufferedImage result = mappingImage(image.toImage());
-        ImageIO.write(result,"bmp",new File("images/output/labeled"+n+".bmp"));
+        System.out.println("find "+ image.getHole() +" in ( "+image.x+","+image.y+ ")");
+        //BufferedImage result = mappingImage(image.toImage());
+        //ImageIO.write(result,"bmp",new File("images/output/labeled"+n+".bmp"));
         n += 1;
       }
     }catch(Exception e){

@@ -13,7 +13,7 @@ define "cv-project2" do
   run.using :main => "edu.poly.tchao.HelloWorld"
 
   desc "processing images..."
-  task :run => compile do
+  task :process => compile do
     images = ['IMG_1.bmp','IMG_2.bmp','IMG_3.bmp','IMG_4.bmp','IMG_5.bmp','IMG_6.bmp','sample.bmp']
     system 'java -cp target/classes edu.poly.tchao.Thresholder ' + images.join(" ")
   end
