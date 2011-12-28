@@ -38,10 +38,10 @@ class Application{
     source = filter.process(source);
       
     //labeling image
-    int labeledImage[][] = Extractor.labeling(source);
-    //ArrayList<CharImage> list = extractor.extractCharacters(source);
-    //extract character image from labeledImage, to a list of CharImage
-    ArrayList<CharImage> list = Extractor.extractImages(labeledImage);
+    Extractor extractor = new Extractor();
+
+    //extract characters
+    ArrayList<CharImage> list = extractor.extractCharImages(source);
 
     System.out.println(list.size() + " characters in image");
     

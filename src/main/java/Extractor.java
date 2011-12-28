@@ -9,20 +9,25 @@ import java.util.HashMap;
 
 public class Extractor{
   public static final int BLACK = 0;
+  public int[][] labeledImage;
+  public HashMap<Integer,Integer> equalTable;
 
-  public static int[][] labeling(BufferedImage image){
+  public Extractor(){
+    equalTable = new HashMap<Integer,Integer>();
+  }
+
+  public int[][] labeling(BufferedImage image){
       int label = 0;
-      HashMap<Integer,Integer> equalTable = new HashMap<Integer,Integer>();
       int width = image.getWidth();
       int height = image.getHeight();
-      int labeledImage[][] = new int[height][width]; 
+      labeledImage = new int[height][width]; 
 
       //start labeling
       for(int h = 1 ; h < height-1; h++){
         for(int w = 1 ; w < width-1; w++){
           int pixel = image.getRGB(w,h) & 0xff;    
           if(pixel == BLACK){
-            int minLabel = getMinLabel(labeledImage,equalTable,h,w);
+            int minLabel = getMinLabel(h,w);
             if(minLabel > 0){
               labeledImage[h][w] = minLabel;
             }else{
@@ -37,23 +42,23 @@ public class Extractor{
       for(int h=1;h<height-1;h++){
         for(int w=1;w<width-1;w++){
           if(equalTable.containsKey(labeledImage[h][w])){
-             labeledImage[h][w] = findEqualivalant(labeledImage[h][w],equalTable);
+             labeledImage[h][w] = findEqualivalant(labeledImage[h][w]);
           }
         }
       }
       return labeledImage;
   }
 
-  public static int findEqualivalant(int value, HashMap<Integer,Integer> equalTable){
+  public int findEqualivalant(int value){
     if(!equalTable.containsKey(value)){
       return value;
     }else{
       int equal = equalTable.get(value);
-      return equal < value ? findEqualivalant(equalTable.get(value),equalTable) : value;
+      return equal < value ? findEqualivalant(equalTable.get(value)) : value;
     }
   }
 
-  public static int getMinLabel(int[][] labeledImage,HashMap<Integer,Integer> equalTable, int h,int w){
+  public int getMinLabel(int h,int w){
     int label = Integer.MAX_VALUE;
     int min = 0;
 
@@ -105,7 +110,10 @@ public class Extractor{
     return result;
   }
 
-  public static ArrayList<CharImage> extractImages(int[][] labeledImage){
+  public ArrayList<CharImage> extractCharImages(BufferedImage source){
+
+    //labeling image to this.labeledImage
+    labeling(source);
 
     int width = labeledImage[0].length;
     int height = labeledImage.length;

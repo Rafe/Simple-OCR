@@ -12,11 +12,11 @@ public class Classifier implements IClassifier{
       //Using maximun width , height ratio to distinct 0 and 4
       if(areEquals(image.getMaxWidth(),1.0f,0.1f) && 
          areEquals(image.getMaxHeight(),1.0f,0.1f)){
+
         image.setCharactor('4');   
 
       } else if(areEquals(image.getMaxWidth(),0.44f,0.2f) && 
                 areEquals(image.getMaxHeight(),0.85f,0.1f)){
-
 
         image.setCharactor('0');
       }
@@ -36,18 +36,7 @@ public class Classifier implements IClassifier{
                areEquals(image.getMaxHeight(),0.45f,0.1f)){
 
         image.setCharactor('3');
-      }else if(areEquals(image.getMaxWidth(),1.0f,0.1f) && 
-         areEquals(image.getMaxHeight(),1.0f,0.1f)){
-
-        image.setCharactor('4');   
-      } else if(image.getHole() == 5){
-        //ad-hod logic for specific result :(
-        //0 become like U in this case
-        if(areEquals(image.getMaxWidth(),0.44f,0.2f) && 
-           areEquals(image.getMaxHeight(),0.85f,0.1f)){
-        image.setCharactor('0');
-        }
-      }
+      } 
     }
 
     //if return false, means the image is rejected

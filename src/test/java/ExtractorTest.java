@@ -14,7 +14,9 @@ public class ExtractorTest{
     map.put(3,2);
     map.put(2,1);
     map.put(1,0);
-    assertTrue(Extractor.findEqualivalant(5,map) == 0);
+    Extractor e = new Extractor();
+    e.equalTable = map;
+    assertTrue(e.findEqualivalant(5) == 0);
   }
 
 }

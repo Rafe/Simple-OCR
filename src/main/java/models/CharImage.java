@@ -175,19 +175,36 @@ public class CharImage{
     queue.add(new Point(h,w));
     while(queue.size() > 0){
       Point p = queue.removeFirst();
+      //paint 8 points to black;
       if(!map[p.h][p.w]){
         map[p.h][p.w] = true;
+
+        //check upper row
         if(p.h - 1 >= 0){
+          if(p.w + 1 < map[0].length){
+            queue.add(new Point(p.h-1,p.w+1));
+          }
           queue.add(new Point(p.h-1,p.w));
+          if(p.w - 1 >= 0){
+            queue.add(new Point(p.h-1,p.w-1));
+          }
         }
-        if(p.h + 1 < map.length){
-          queue.add(new Point(p.h+1,p.w));
-        }
+        //check middle row
         if(p.w + 1 < map[0].length){
           queue.add(new Point(p.h,p.w+1));
         }
+        //check lower row
         if(p.w - 1 >= 0){
           queue.add(new Point(p.h,p.w-1));
+        }
+        if(p.h + 1 < map.length){
+          if(p.w + 1 < map[0].length){
+            queue.add(new Point(p.h+1,p.w+1));
+          }
+          queue.add(new Point(p.h+1,p.w));
+          if(p.w - 1 >= 0){
+            queue.add(new Point(p.h+1,p.w-1));
+          }
         }
       }
     }
