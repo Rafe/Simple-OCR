@@ -1,0 +1,8 @@
+0.refactor code
+1.extract things to filter 
+2.modify hole counting algorithm
+3.stroke extraction 
+4.r-table & stroke head count
+5.better filter
+6.learning sample classifiter
+

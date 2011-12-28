@@ -10,7 +10,7 @@ import java.awt.image.*;
 import java.io.*;
 import javax.imageio.ImageIO;
 
-public class Thresholder{
+public class ThresholdFilter implements IFilter{
 
   /** Transform image to mono image, pixel under threshold will be set to 0,
    * pixel over the threshold will be set to grayValue
@@ -19,6 +19,8 @@ public class Thresholder{
    * @param grayValue the gray value to be set for pixel over threshold
    * @return BufferedImage as Transformed image
    */
+
+  public static final int THRESHOLD = 120;
   public BufferedImage thresholdTransform(BufferedImage image,double threshold, int grayValue){
     if(image == null){
       return null;
@@ -76,35 +78,25 @@ public class Thresholder{
     }
   }
 
-  public static void main(String[] args){
-    new Thresholder(args);
+  public BufferedImage process(String file){
+    try{
+      System.out.println("processing::" + file);
+      BufferedImage image = ImageIO.read(new File("images/"+file));   
+      return process(image);
+
+    }catch(IOException e){
+      System.err.println(e.getMessage());
+    }catch(IllegalArgumentException e){
+      System.err.println(e.getMessage());
+    }
+    return null;
   }
 
-  public Thresholder(String[] files){
-    if(files.length < 1){
-      usage();
-      return;
-    }
-
-    for(String file:files){
-      try{
-        System.out.println("processing::" + file);
-
-        BufferedImage image = ImageIO.read(new File("images/"+file));   
-        BufferedImage a = thresholdTransform(image,120,255);
-
-        saveImage(a,"images/output/"+file);
-
-      }catch(IOException e){
-        System.err.println(e.getMessage());
-      }catch(IllegalArgumentException e){
-        System.err.println(e.getMessage());
-      }
-    }
+  public BufferedImage process(BufferedImage image){
+    return thresholdTransform(image,THRESHOLD,255);
   }
 
-  public static void usage(){
-    System.out.println("usage:");
-    System.out.println("java Thresholder [file1] [file2] ...");
+  public ThresholdFilter(){
+  
   }
 }

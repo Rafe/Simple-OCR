@@ -21,12 +21,21 @@ public class CharImageTest{
   }
 
   @Test 
-  public void getRatio_should_return_ratio(){
+  public void getRatio_should_return_width_height_ratio(){
     int[][] labeledImage = {{0,1,0,0},{0,1,1,1},{0,1,1,0}};
     int label = 1;
     CharImage image = new CharImage(label,labeledImage);
     
-    assertEquals(image.getRatio(),0.5,0.1);
+    assertEquals(image.getRatio(),0.75,0.1);
+  }
+
+  @Test 
+  public void getBlackRatio_should_return_ratio(){
+    int[][] labeledImage = {{0,1,0,0},{0,1,1,1},{0,1,1,0}};
+    int label = 1;
+    CharImage image = new CharImage(label,labeledImage);
+    
+    assertEquals(image.getBlackRatio(),0.5,0.1);
   }
 
   @Test

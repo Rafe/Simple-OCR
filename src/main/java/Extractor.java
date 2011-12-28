@@ -140,30 +140,4 @@ public class Extractor{
     }
     return result;
   }
-
-  public static void main(String[] args){
-    try{
-      BufferedImage source = ImageIO.read(new File("images/output/IMG_6.bmp"));   
-      int label = 0;
-      int width = source.getWidth();
-      int height = source.getHeight();
-      int labeledImage[][] = labeling(source);
-
-      ArrayList<CharImage> list = extractImages(labeledImage);
-      System.out.println(list.size() + " charactors in image");
-      
-      IClassifier classifier = new Classifier();
-
-      int n = 1;
-      for(CharImage image : list){
-        classifier.process(image);
-        image.dump();
-        BufferedImage result = mappingImage(image.toImage());
-        ImageIO.write(result,"bmp",new File("images/output/labeled"+n+".bmp"));
-        n += 1;
-      }
-    }catch(Exception e){
-      System.out.println(e.getMessage());
-    }
-  }
 }

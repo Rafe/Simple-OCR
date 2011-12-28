@@ -4,6 +4,7 @@ import edu.poly.tchao.CharRange;
 
 import java.util.*;
 
+//Extracted character image for classify
 public class CharImage{
   public boolean[][] imageMap;
   public float ratio;
@@ -26,11 +27,12 @@ public class CharImage{
     hole = -1;
     x = range.left;
     y = range.top;
-    charactor = 'w';
+    charactor = '*';
     maxHeight = 0;
     maxWidth = 0;
     this.imageMap = new boolean[height][width];
 
+    //copy the labeledImage to bit imageMap
     for(int h = range.top;h<=range.down;h++){
       for(int w = range.left;w<=range.right;w++){
         if(labeledImage[h][w] == label){
@@ -56,6 +58,7 @@ public class CharImage{
     return imageMap.length;
   }
 
+  //Transform to BufferedImage for output
   public int[][] toImage(){
     int[][] image = new int[getHeight()][getWidth()];
     for(int h =0;h<getHeight();h++){
@@ -66,6 +69,7 @@ public class CharImage{
     return image;
   }
 
+  //hole counting
   public int getHole(){
     if(hole > -1){
       return hole;
@@ -73,11 +77,13 @@ public class CharImage{
 
     boolean[][] map = copyArray(imageMap);
 
+    //first, paint the background to black
     paintBlack(map,0,0);
     paintBlack(map,0,getWidth()-1);
     paintBlack(map,getHeight()-1,0);
     paintBlack(map,getHeight()-1,getWidth()-1);
 
+    //then, start counting
     int e = 0;
     int i = 0;
 
@@ -99,6 +105,7 @@ public class CharImage{
     return hole;
   }
 
+  //black / white ratio of image
   public float getBlackRatio(){
     if(ratio > 0){
       return ratio;
@@ -114,10 +121,12 @@ public class CharImage{
     return blackCount / (getWidth() * getHeight());
   }
 
+  //width/height ratio
   public float getRatio(){
     return (float) getHeight() / (float) getWidth();
   }
 
+  // maximun height line / height ratio
   public float getMaxHeight(){
     for(int w = 0; w < getWidth();w++){
       int maxInLine = 0;
@@ -137,6 +146,7 @@ public class CharImage{
     return (float) maxHeight / (float) getHeight();
   }
 
+  // maximun width line / width ratio
   public float getMaxWidth(){
     for (int h = 0; h < getHeight(); h++) {
       int maxInLine = 0;
@@ -156,6 +166,7 @@ public class CharImage{
     return (float) maxWidth / (float) getWidth();
   }
 
+  // method for painting background to black
   public static void paintBlack(boolean[][] map,int h, int w){
 
     LinkedList<Point> queue = new LinkedList<Point>();
@@ -183,19 +194,24 @@ public class CharImage{
     }
   }
 
+  //output character
   public void print(){
-    System.out.println("found charactor "+ this.charactor +" in ( "+this.x+","+this.y+ ")");
+    if(this.charactor == '*'){
+      System.out.println("Reject character in ( "+this.x+","+this.y+ ")");
+    }else{
+      System.out.println("Found character "+ this.charactor +" in ( "+this.x+","+this.y+ ")");
+    }
   }
 
   public void dump(){
     print();
     System.out.println("hole:" + getHole());
-    System.out.println("Height:" + getHeight());
-    System.out.println("Width:" + getWidth());
-    System.out.println("MaxHeight:" + getMaxHeight());
-    System.out.println("MaxWidth:" + getMaxWidth());
-    System.out.println("Ratio:" + getRatio());
-    System.out.println("BlackRatio:" + getBlackRatio());
+    System.out.print("Height:" + getHeight());
+    System.out.println(", Width:" + getWidth());
+    System.out.print("MaxHeight:" + getMaxHeight());
+    System.out.println(", MaxWidth:" + getMaxWidth());
+    System.out.print("Ratio:" + getRatio());
+    System.out.println(", BlackRatio:" + getBlackRatio());
     System.out.println("");
   }
 

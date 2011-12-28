@@ -1,5 +1,6 @@
 package edu.poly.tchao;
 
+//class for record the range, pixels number and x,y for extract character image.
 public class CharRange{
   
   public int count;
@@ -60,6 +61,7 @@ public class CharRange{
     return height;
   }
 
+  //check the range is big enought to count as a character
   public boolean isValid(){
     if(count < AREA_THRESHOLD || 
         getWidth() > AREA_WIDTH || 
