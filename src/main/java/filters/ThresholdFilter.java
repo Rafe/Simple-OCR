@@ -63,35 +63,6 @@ public class ThresholdFilter implements IFilter{
     return result;
   }
 
-  /** Save image to file
-   * @param image image to be saved
-   * @param fileName name for the new image
-   */
-  public void saveImage(BufferedImage image,String fileName){
-    try{
-      boolean r = ImageIO.write(image,"bmp",new File(fileName));
-      if(!r){
-        throw new IOException("Output format error when Saving Image");
-      }
-    }catch(IOException e){
-      System.out.println(e.getMessage());
-    }
-  }
-
-  public BufferedImage process(String file){
-    try{
-      System.out.println("processing::" + file);
-      BufferedImage image = ImageIO.read(new File("images/"+file));   
-      return process(image);
-
-    }catch(IOException e){
-      System.err.println(e.getMessage());
-    }catch(IllegalArgumentException e){
-      System.err.println(e.getMessage());
-    }
-    return null;
-  }
-
   public BufferedImage process(BufferedImage image){
     return thresholdTransform(image,THRESHOLD,255);
   }

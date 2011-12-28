@@ -79,16 +79,15 @@ public class CharImage{
 
     //first, paint the background to black
     paintBlack(map,0,0);
-    paintBlack(map,0,getWidth()-1);
-    paintBlack(map,getHeight()-1,0);
-    paintBlack(map,getHeight()-1,getWidth()-1);
 
     //then, start counting
     int e = 0;
     int i = 0;
+    int height = map.length;
+    int width = map[0].length;
 
-    for (int h = 0; h < getHeight() - 1 ; h++) {
-      for (int w = 0; w < getWidth() - 1 ; w++) {
+    for (int h = 0; h < height - 1 ; h++) {
+      for (int w = 0; w < width - 1 ; w++) {
         int black = 0;
         if(map[h][w]) black += 1;
         if(map[h+1][w]) black += 1;
@@ -216,10 +215,10 @@ public class CharImage{
   }
 
   public static boolean[][] copyArray(boolean[][] array){
-    boolean[][] n = new boolean[array.length][array[0].length];
+    boolean[][] n = new boolean[array.length+2][array[0].length+2];
     for(int h = 0 ; h < array.length ; h++){
       for( int w = 0; w < array[0].length ; w++){
-        n[h][w] = array[h][w];
+        n[h+1][w+1] = array[h][w];
       }
     }
     return n;

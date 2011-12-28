@@ -8,47 +8,53 @@ import javax.imageio.ImageIO;
 
 class Application{
 
+  private IFilter filter;
+  private FileManager fileManager;
   //process all images under /images
   public static void main (String [] args){
-      String[] files = {"IMG_1.bmp","IMG_2.bmp","IMG_3.bmp",
+      String[] files = {//"IMG_1.bmp","IMG_2.bmp","IMG_3.bmp"};
                         "IMG_4.bmp","IMG_5.bmp","IMG_6.bmp"};
+                      //  "IMG_7.bmp","IMG_8.bmp","IMG_9.bmp"};
+      Application app = new Application();
       for(String file:files){
-        process(file);
+        app.process(file);
       }
   }
 
+  public Application(){
+    filter = new ThresholdFilter();
+  }
+
   //process images
-  public static void process(String file){
-    try{
-      ThresholdFilter thresholdFilter = new ThresholdFilter();
-      Extractor extractor = new Extractor();
+  public void process(String file){
 
+    fileManager = new FileManager();
+    fileManager.setPath("images/output/");
 
-      //filter the image, remove noise
-      BufferedImage source = thresholdFilter.process(file);
-        
-      //labeling image
-      int labeledImage[][] = Extractor.labeling(source);
+    System.out.println("Processing :: " + file);
+    BufferedImage source = filter.process(fileManager.open(file));
 
-      //extract character image from labeledImage, to a list of CharImage
-      ArrayList<CharImage> list = Extractor.extractImages(labeledImage);
-      System.out.println(list.size() + " characters in image");
+    //filter the image, remove noise
+    source = filter.process(source);
       
-      IClassifier classifier = new Classifier();
+    //labeling image
+    int labeledImage[][] = Extractor.labeling(source);
+    //ArrayList<CharImage> list = extractor.extractCharacters(source);
+    //extract character image from labeledImage, to a list of CharImage
+    ArrayList<CharImage> list = Extractor.extractImages(labeledImage);
 
-      int n = 1;
-      for(CharImage image : list){
-        classifier.process(image);
-        //image.print();
-        image.dump();
+    System.out.println(list.size() + " characters in image");
+    
+    IClassifier classifier = new Classifier();
 
-        //save back to images/output/
-        BufferedImage result = Extractor.mappingImage(image.toImage());
-        ImageIO.write(result,"bmp",new File("images/output/"+file+"labeled"+n+".bmp"));
-        n += 1;
-      }
-    }catch(Exception e){
-      e.printStackTrace();
+    for(CharImage image : list){
+      classifier.process(image);
+      //image.print();
+      image.dump();
+
+      //save back to images/output/
+      BufferedImage result = Extractor.mappingImage(image.toImage());
+      fileManager.save(file,result);
     }
   }
 }

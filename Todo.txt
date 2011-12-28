@@ -1,6 +1,9 @@
 0.refactor code
-1.extract things to filter 
-2.modify hole counting algorithm
+  modify extractor
+  add more tests.
+
+2.modify hole counting algorithm - done
+
 3.stroke extraction 
 4.r-table & stroke head count
 5.better filter
