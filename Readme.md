@@ -6,54 +6,51 @@ Derived from Computer Vision Class Project
 
 clone the project, run 
 
-  java -jar App.jar 
+    java -jar App.jar 
 
 To process images from IMG_1.bmp to IMG_6.bmp , IMG_8.bmp 
 
 You can also install buildr to run other tests and tasks,
 On Ruby installed environment, type
 
-  gem install buildr
+    gem install buildr
 
 to install buildr, then set the java path of buildr and run:
 
-  buildr 
+    buildr 
 
 Can execute the project
 
 For running test, type 
 
-  buildr test 
+    buildr test 
 
 To test is IMG_1 to IMG 8 is matching.
 
 ##Program Structures
 
 
-/src
-  /main
-    /classifier
-      Classifier.java   -- main classifier for detecting character from minimun character "box" 
-    /filters
-      IFilter.java      -- filter interface
-      ThresholdFilter.java -- filter using threshold to delete the background and noises.
-    /models
-      CharImage.java    -- Extracted minimum character box, also include the feature logics
-      CharRange.java    -- Use for detect position and update the box range of a character.
-      Point.java        -- data model for point 
-      FloatPoint.java   -- data model for float x,y (for ratio calculation)
-    Application.java    -- Entry point for program. process all images and output result.
-    Extractor.java      -- Extract character from file.
-    FileManager.java    -- open and save image file.
-  /test                 -- junit test files
-/lib
-/images/                -- Images for processing
-  /output               -- The extracted and filtered images.
-Buildfile               -- The buildfile and tasks for buildr 
-App.jar                 -- Packaged application, **no images in jar, so still needed to execute in project directory.
-result.txt              -- result of "java -jar App.jar > result.txt" 
-                           Saving output of application.
-Readme.md
+    /src
+      /main
+        /classifier
+          Classifier.java   -- main classifier for detecting character from minimun character "box" 
+        /filters
+          IFilter.java      -- filter interface
+          ThresholdFilter.java -- filter using threshold to delete the background and noises.
+        /models
+          CharImage.java    -- Extracted minimum character box, also include the feature logics
+          CharRange.java    -- Use for detect position and update the box range of a character.
+          Point.java        -- data model for point 
+          FloatPoint.java   -- data model for float x,y (for ratio calculation)
+        Application.java    -- Entry point for program. process all images and output result.
+        Extractor.java      -- Extract character from file.
+        FileManager.java    -- open and save image file.
+      /test                 -- junit test files
+    /lib
+    /images/                -- Images for processing
+      /output               -- The extracted and filtered images.
+    Buildfile               -- The buildfile and tasks for buildr 
+    Readme.md
 
 
 ## Preprocessing 
@@ -102,7 +99,7 @@ Readme.md
     3. Matching center position to distinct 6,9 
        the center of 9 will be higher than 6, since most of the pixel is in the upper part.
 
-    for {1,2,3,5,7}:
+    for {1,2,3,5,7}:  
 
     1. Using height, width ratio to detect 1 
 
