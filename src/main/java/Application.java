@@ -6,16 +6,20 @@ import java.awt.image.*;
 import java.io.*;
 import javax.imageio.ImageIO;
 
-class Application{
+public class Application{
 
+  public static boolean DEBUG;
   private IFilter filter;
   private FileManager fileManager;
   //process all images under /images
   public static void main (String [] args){
-      String[] files = {//"IMG_1.bmp","IMG_2.bmp","IMG_3.bmp"};
-                        "IMG_4.bmp","IMG_5.bmp","IMG_6.bmp"};
-                      //  "IMG_7.bmp","IMG_8.bmp","IMG_9.bmp"};
+      String[] files = {"IMG_1.bmp","IMG_2.bmp","IMG_3.bmp",
+                        "IMG_4.bmp","IMG_5.bmp","IMG_6.bmp",
+                        //"IMG_7.bmp",
+                        "IMG_8.bmp"};
+                        //"IMG_9.bmp"};
       Application app = new Application();
+      Application.DEBUG = true;
       for(String file:files){
         app.process(file);
       }
@@ -26,7 +30,9 @@ class Application{
   }
 
   //process images
-  public void process(String file){
+  public String process(String file){
+
+    StringBuilder result = new StringBuilder();
 
     fileManager = new FileManager();
     fileManager.setPath("images/output/");
@@ -49,12 +55,14 @@ class Application{
 
     for(CharImage image : list){
       classifier.process(image);
-      //image.print();
-      image.dump();
-
+      if(DEBUG){
+        image.dump();
+      }
+      result.append(image.getCharactor());
       //save back to images/output/
-      BufferedImage result = Extractor.mappingImage(image.toImage());
-      fileManager.save(file,result);
+      BufferedImage imageResult = Extractor.mappingImage(image.toImage());
+      fileManager.save(file,imageResult);
     }
+    return result.toString();
   }
 }

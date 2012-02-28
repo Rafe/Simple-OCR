@@ -14,6 +14,7 @@ public class CharImage{
   public int maxHeight;
   public int maxWidth;
   private char charactor;
+  private FloatPoint center;
 
   public CharImage(int label,int[][] labeledImage){
     this(label,labeledImage,
@@ -106,18 +107,18 @@ public class CharImage{
 
   //black / white ratio of image
   public float getBlackRatio(){
-    if(ratio > 0){
-      return ratio;
-    }
-    float blackCount = 0;
-    for(int h=0; h<getHeight();h++){
-      for(int w=0; w<getWidth();w++){
-        if(imageMap[h][w]){
-          blackCount += 1;
-        } 
+    if(ratio == 0){
+      float blackCount = 0;
+      for(int h=0; h<getHeight();h++){
+        for(int w=0; w<getWidth();w++){
+          if(imageMap[h][w]){
+            blackCount += 1;
+          } 
+        }
       }
+      ratio = blackCount / (getWidth() * getHeight());
     }
-    return blackCount / (getWidth() * getHeight());
+    return ratio;
   }
 
   //width/height ratio
@@ -127,41 +128,43 @@ public class CharImage{
 
   // maximun height line / height ratio
   public float getMaxHeight(){
-    for(int w = 0; w < getWidth();w++){
-      int maxInLine = 0;
-      int line = 0;
-      for (int h = 0; h < getHeight(); h++) {
-        if(imageMap[h][w] == true){
-          line += 1;
-        }else{
-          maxInLine = Math.max(line,maxInLine);
-          line = 0;
+    if(maxHeight == 0){
+      for(int w = 0; w < getWidth();w++){
+        int maxInLine = 0;
+        int line = 0;
+        for (int h = 0; h < getHeight(); h++) {
+          if(imageMap[h][w] == true){
+            line += 1;
+          }else{
+            maxInLine = Math.max(line,maxInLine);
+            line = 0;
+          }
         }
+        maxInLine = Math.max(line,maxInLine);
+        maxHeight = Math.max(maxHeight,maxInLine);
       }
-      maxInLine = Math.max(line,maxInLine);
-      maxHeight = Math.max(maxHeight,maxInLine);
     }
-    //return maxHeight;
     return (float) maxHeight / (float) getHeight();
   }
 
   // maximun width line / width ratio
   public float getMaxWidth(){
-    for (int h = 0; h < getHeight(); h++) {
-      int maxInLine = 0;
-      int line = 0;
-      for(int w = 0; w < getWidth(); w++){
-        if(imageMap[h][w]){
-          line += 1;
-        }else{
-          maxInLine = Math.max(line,maxInLine);
-          line = 0;
+    if(maxWidth == 0){
+      for (int h = 0; h < getHeight(); h++) {
+        int maxInLine = 0;
+        int line = 0;
+        for(int w = 0; w < getWidth(); w++){
+          if(imageMap[h][w]){
+            line += 1;
+          }else{
+            maxInLine = Math.max(line,maxInLine);
+            line = 0;
+          }
         }
+        maxInLine = Math.max(line,maxInLine);
+        maxWidth = Math.max(maxWidth,maxInLine);
       }
-      maxInLine = Math.max(line,maxInLine);
-      maxWidth = Math.max(maxWidth,maxInLine);
     }
-    //return maxWidth;
     return (float) maxWidth / (float) getWidth();
   }
 
@@ -210,6 +213,27 @@ public class CharImage{
     }
   }
 
+  public FloatPoint getCenter(){
+    if(center == null){
+      center = new FloatPoint();
+      float x = 0;
+      float y = 0;
+      int n = 0;
+      for (int h = 0; h < imageMap.length; h++ ){
+        for (int w = 0; w < imageMap[0].length; w++ ){
+          if(imageMap[h][w]){
+            x += w;
+            y += h;
+            n += 1;
+          }
+        } 
+      }   
+      center.x = (x / n) / getWidth();
+      center.y = (y / n) / getHeight();
+    }
+    return center;
+  }
+
   //output character
   public void print(){
     if(this.charactor == '*'){
@@ -228,6 +252,7 @@ public class CharImage{
     System.out.println(", MaxWidth:" + getMaxWidth());
     System.out.print("Ratio:" + getRatio());
     System.out.println(", BlackRatio:" + getBlackRatio());
+    System.out.println("Center:" + getCenter().x + "," + getCenter().y);
     System.out.println("");
   }
 
@@ -239,14 +264,5 @@ public class CharImage{
       }
     }
     return n;
-  }
-}
-
-class Point{
-  public int h;
-  public int w;
-  public Point(int h,int w){
-    this.h = h;
-    this.w = w;
   }
 }

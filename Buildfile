@@ -1,7 +1,7 @@
 repositories.remote << 'http://repo1.maven.org/maven2'
 
 Project.local_task :run
-Project.local_task :process
+Project.local_task :line
 
 desc "computer vision project2 - simple OCR program"
 define "cv-project2" do
@@ -13,9 +13,7 @@ define "cv-project2" do
   })
   run.using :main => "edu.poly.tchao.Application"
 
-  desc "processing images..."
-  task :process => compile do
-    images = ['IMG_1.bmp','IMG_2.bmp','IMG_3.bmp','IMG_4.bmp','IMG_5.bmp','IMG_6.bmp']
-    system 'java -cp target/classes edu.poly.tchao.Application ' + images.join(" ")
+  task :line => compile do
+    system 'java -cp target/classes edu.poly.tchao.LineExtractor'
   end
 end
