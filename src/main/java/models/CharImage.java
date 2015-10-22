@@ -1,6 +1,6 @@
 package edu.poly.tchao;
 
-import edu.poly.tchao.CharRange;
+import edu.poly.tchao.*;
 
 import java.util.*;
 
@@ -113,7 +113,7 @@ public class CharImage{
         for(int w=0; w<getWidth();w++){
           if(imageMap[h][w]){
             blackCount += 1;
-          } 
+          }
         }
       }
       ratio = blackCount / (getWidth() * getHeight());
@@ -226,8 +226,8 @@ public class CharImage{
             y += h;
             n += 1;
           }
-        } 
-      }   
+        }
+      }
       center.x = (x / n) / getWidth();
       center.y = (y / n) / getHeight();
     }
